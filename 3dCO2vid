@@ -1,0 +1,36 @@
+PShape sphere;
+
+import processing.video.*;
+import peasy.*;
+
+Movie myMovie;
+PeasyCam cam;
+
+void setup() {
+  size(750, 750, P3D);
+  cam = new PeasyCam(this, 100);
+  cam.setMinimumDistance(33);
+  cam.setMaximumDistance(200);
+  float cameraZ = ((height/2.0) / tan(PI*60.0/360.0));
+  perspective(PI/3.0, width/height, cameraZ/2000.0, cameraZ*10.0);
+  
+  stroke(0);
+  strokeWeight(0);
+
+  myMovie = new Movie(this, "videoplayback.mp4");
+  myMovie.loop();
+  sphere = createShape(SPHERE, 30);
+  sphere.setTexture(myMovie);
+}
+
+void draw() {
+  background(255, 255, 255);
+  fill(0);
+  sphere.setTexture(myMovie);
+  shape(sphere);
+}
+
+// Called every time a new frame is available to read
+void movieEvent(Movie m) {
+  m.read();
+}
