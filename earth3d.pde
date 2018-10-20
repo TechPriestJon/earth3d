@@ -13,6 +13,8 @@ import peasy.*;
 
 PeasyCam cam;
 
+ArrayList<Element> elementList;
+
 void setup() {
   size(600,600,P3D);
   cam = new PeasyCam(this, 100);
@@ -25,10 +27,10 @@ void setup() {
   stroke(0);
   strokeWeight(0);
   earth = createShape(SPHERE, radius);
-  earth_texture = loadImage("earth_flat_map.jpg");
+  earth_texture = loadImage("Albedo.jpg");
   earth.setTexture(earth_texture);  
   
-  ArrayList<Element> elementList = GetMeteorElements();
+  elementList = GetMeteorElements();
   
   for (int i = 0; i < elementList.size(); i++) {
     println(elementList.get(i).latitude + "-" + elementList.get(i).latitude + "-" + elementList.get(i).timestamp);
@@ -36,29 +38,51 @@ void setup() {
 }
 
 void draw() {
-  background(0);
+ background(0);
 
-  box(0.2, 85, 0.2);
+ box(0.2, 85, 0.2);
 
-  fill(255,0,0);
-  shape(earth);
-  PVector c = get_latlong_xyz(40.7128, -74.0060);
-  translate(c.x, -c.z, c.y);
-  sphere(1);
-} 
+ fill(255,0,0);
+ shape(earth);
+ 
+ //pushMatrix();
+ //PVector c = get_latlong_xyz(40.7128, -74.0060); // New York
+ //PVector c = get_latlong_xyz(35.6895, 139.6917); // Tokyo
+ //  PVector c = get_latlong_xyz(50.7184, -3.5339); // Exeter
+ //  PVector c = get_latlong_xyz(0, 0); // Greenwich, Equator
+ //  PVector c = get_latlong_xyz(0, 90); // ~Singapore
+ //  PVector c = get_latlong_xyz(90, 0); // N Pole
+ //  PVector c = get_latlong_xyz(-90, 0); // S Pole
+ //translate(-c.x, -c.z, c.y);
+ //sphere(1);
+ //popMatrix();
+ 
+ int k = 0;
+
+ for (int j = 0; j < 20
+ //elementList.size() * k + elementList.size() 
+ ; j++) {
+ pushMatrix();
+ PVector c2 = get_latlong_xyz(elementList.get(j).latitude, elementList.get(j).longitude); // Tokyo
+ translate(-c2.x, -c2.z, c2.y);
+ sphere(1);
+ popMatrix();
+ }
+ 
+}
 
 
 PVector get_latlong_xyz(float latitude, float longitude){
 
- latitude = radians(latitude);
- longitude = radians(longitude);
+  latitude = radians(latitude);
+  longitude = radians(longitude);
 
- PVector coords = new PVector(0, 0, 0);
- coords.x = radius * cos(latitude) * cos(longitude);
- coords.y = radius * cos(latitude) * sin(longitude);
- coords.z = radius * sin(latitude);
+  PVector coords = new PVector(0, 0, 0);
+  coords.x = radius * cos(latitude) * cos(longitude);
+  coords.y = radius * cos(latitude) * sin(longitude);
+  coords.z = radius * sin(latitude);
 
- return coords;
+  return coords;
 }
 
 ArrayList<Element> GetMeteorElements(){
